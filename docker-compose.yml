@@ -9,11 +9,18 @@ services:
       - ./:/var/www/html
     ports:
       - "8000:8000"
+    command: php artisan serve --host=0.0.0.0 --port=8000
     environment:
       COMPOSER_ALLOW_SUPERUSER: "1"
     depends_on:
       - postgres
       - redis
+    healthcheck:
+      test: ["CMD", "php", "-r", "$$headers = @get_headers('http://127.0.0.1:8000/'); exit(str_contains($$headers[0] ?? '', '200') ? 0 : 1);"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
 
   queue:
     build:
@@ -26,10 +33,10 @@ services:
     command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90
     depends_on:
       php:
-        condition: service_started
+        condition: service_healthy
       postgres:
         condition: service_started
-      redis:
+      laravel_orders_redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "php", "-r", "exit(str_contains(@file_get_contents('/proc/1/cmdline') ?: '', 'queue:work') ? 0 : 1);"]
