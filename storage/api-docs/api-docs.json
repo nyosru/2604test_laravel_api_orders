@@ -1,0 +1,53 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel 12 Orders API",
+        "description": "Minimal API documentation generated with L5 Swagger.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Local Docker environment"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Health check route",
+                "operationId": "healthCheck",
+                "responses": {
+                    "200": {
+                        "description": "Application is running",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "app": {
+                                            "type": "string",
+                                            "example": "Laravel 12 Orders API"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "ok"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Health",
+            "description": "Application health endpoints"
+        }
+    ]
+}
