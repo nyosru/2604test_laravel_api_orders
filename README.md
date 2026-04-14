@@ -41,7 +41,8 @@ http://127.0.0.1:8000/api/documentation
 
 и готово :)
 
-    Я Сергей
+    Я Сергей 
+https://php-cat.com
 
 мой вк для связи https://vk.com/phpcatcom
 
