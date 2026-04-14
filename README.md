@@ -9,8 +9,21 @@
 
 ## как запускать
 
+на компе установлен и запущен докер
+команды по очереди запускаем в терминале
 
-2604test_laravel_api_orders
+```
+git clone https://github.com/nyosru/2604test_laravel_api_orders
+``` 
+
+``` 
+cd 2604test_laravel_api_orders
+``` 
+
+``` 
+make start
+```
+
 
 
 ## About Laravel
