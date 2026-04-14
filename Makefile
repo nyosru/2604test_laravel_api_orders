@@ -4,8 +4,8 @@ start:
 	cp -n .env.example .env || true
 	docker compose up --build -d
 	@echo "❤️ ++ Докер контейнеры запущены ( Ларавель, БД, Редис для очередей, Ларавель что обрабатывает очереди"
-	docker compose exec php php artisan key:generate --force
 	docker compose exec php composer i
+	docker compose exec php php artisan key:generate --force
 	docker compose exec php php artisan l5-swagger:generate
 	@echo "❤️ ++ Свагер готов"
 	docker compose exec php php artisan migrate:fresh --seed --force
