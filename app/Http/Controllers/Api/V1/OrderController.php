@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\OrderIndexRequest;
 use App\Http\Requests\Api\V1\OrderStoreRequest;
+use App\Http\Requests\Api\V1\OrderUpdateStatusRequest;
 use App\Http\Resources\OrderResource;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
@@ -123,5 +124,52 @@ class OrderController extends Controller
     public function show(int $order): OrderResource
     {
         return new OrderResource($this->orderService->getById($order));
+    }
+
+    #[OA\Patch(
+        path: '/api/v1/orders/{order}/status',
+        operationId: 'updateOrderStatus',
+        summary: 'Update order status',
+        tags: ['Orders'],
+        parameters: [
+            new OA\Parameter(name: 'order', in: 'path', required: true, description: 'Order identifier', schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            description: 'New order status',
+            content: new OA\JsonContent(
+                required: ['status'],
+                properties: [
+                    new OA\Property(property: 'status', type: 'string', enum: ['new', 'confirmed', 'processing', 'shipped', 'completed', 'cancelled'], example: 'confirmed'),
+                ],
+                type: 'object'
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Order status updated',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'data', ref: '#/components/schemas/Order'),
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Order not found',
+                content: new OA\JsonContent(ref: '#/components/schemas/NotFoundError')
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')
+            ),
+        ]
+    )]
+    public function updateStatus(OrderUpdateStatusRequest $request, int $order): OrderResource
+    {
+        return new OrderResource($this->orderService->updateStatus($request->toDto($order)));
     }
 }

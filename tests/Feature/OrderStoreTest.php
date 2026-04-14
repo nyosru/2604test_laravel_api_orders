@@ -24,6 +24,8 @@ class OrderStoreTest extends TestCase
             'price' => 25.00,
             'stock_quantity' => 5,
         ]);
+        $firstProductInitialStock = $firstProduct->stock_quantity;
+        $secondProductInitialStock = $secondProduct->stock_quantity;
 
         $response = $this->postJson('/api/v1/orders', [
             'customer_id' => $customer->id,
@@ -70,8 +72,8 @@ class OrderStoreTest extends TestCase
             'total_price' => '75.00',
         ]);
 
-        $this->assertSame(8, $firstProduct->fresh()->stock_quantity);
-        $this->assertSame(2, $secondProduct->fresh()->stock_quantity);
+        $this->assertSame($firstProductInitialStock - 2, $firstProduct->fresh()->stock_quantity);
+        $this->assertSame($secondProductInitialStock - 3, $secondProduct->fresh()->stock_quantity);
     }
 
     public function test_it_returns_validation_error_and_keeps_data_unchanged_when_stock_is_not_enough(): void

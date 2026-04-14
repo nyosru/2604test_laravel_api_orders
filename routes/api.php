@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 Route::prefix('v1')->group(function (): void {
     Route::get('/products', [ProductController::class, 'index']);
@@ -11,5 +14,6 @@ Route::prefix('v1')->group(function (): void {
     Route::get('/orders/{order}', [OrderController::class, 'show']);
 
     Route::post('/orders', [OrderController::class, 'store']);
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus']);
 
 });

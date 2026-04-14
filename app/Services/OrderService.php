@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\DTOs\Orders\CreateOrderData;
 use App\DTOs\Orders\OrderFilterData;
+use App\DTOs\Orders\UpdateOrderStatusData;
 use App\Enums\OrderStatus;
+use App\Http\Requests\Api\V1\ApiRequest;
+use App\Jobs\ExportOrderJob;
 use App\Models\Order;
 use App\Models\Product;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
@@ -87,7 +90,7 @@ class OrderService
 
             $this->orderRepository->updateTotals($order, $totalAmount);
 
-            return $this->orderRepository->findOrFail($order->id, [
+            return $this->findOrderOrFail($order->id, [
                 'customer',
                 'items.product',
             ]);
@@ -104,9 +107,51 @@ class OrderService
 
     public function getById(int $orderId): Order
     {
-        return $this->orderRepository->findOrFail($orderId, [
+        return $this->findOrderOrFail($orderId, [
             'customer',
             'items.product',
         ]);
+    }
+
+    public function updateStatus(UpdateOrderStatusData $data): Order
+    {
+        $order = DB::transaction(function () use ($data): Order {
+            $order = $this->findOrderOrFail($data->orderId, [
+                'customer',
+                'items.product',
+            ]);
+
+            $wasConfirmed = $order->status === OrderStatus::Confirmed;
+            $attributes = [];
+
+            if (! $wasConfirmed && $data->status === OrderStatus::Confirmed) {
+                $attributes['confirmed_at'] = now();
+            }
+
+            $updatedOrder = $this->orderRepository->updateStatus($order, $data->status, $attributes);
+
+            if (! $wasConfirmed && $data->status === OrderStatus::Confirmed) {
+                ExportOrderJob::dispatch($updatedOrder->id)->afterCommit();
+            }
+
+            return $updatedOrder;
+        });
+
+        return $this->findOrderOrFail($order->id, [
+            'customer',
+            'items.product',
+        ]);
+    }
+
+    /**
+     * @param  array<int, string>  $with
+     */
+    private function findOrderOrFail(int $orderId, array $with = []): Order
+    {
+        try {
+            return $this->orderRepository->findOrFail($orderId, $with);
+        } catch (ModelNotFoundException $exception) {
+            ApiRequest::notFound('Not found');
+        }
     }
 }

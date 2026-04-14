@@ -17,6 +17,30 @@ services:
     tty: true
     stdin_open: true
 
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: laravel_orders_queue
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90
+    depends_on:
+      php:
+        condition: service_started
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(str_contains(@file_get_contents('/proc/1/cmdline') ?: '', 'queue:work') ? 0 : 1);"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
   postgres:
     image: postgres:17-alpine
     container_name: laravel_orders_postgres
@@ -32,3 +56,9 @@ services:
     container_name: laravel_orders_redis
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s

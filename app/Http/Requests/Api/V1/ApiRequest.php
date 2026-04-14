@@ -15,4 +15,13 @@ abstract class ApiRequest extends FormRequest
             'errors' => $validator->errors(),
         ], 422));
     }
+
+    public static function notFound(string $message = null): never
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => $message ?? 'Not found' ,
+        ], 404 , [
+            'Content-Type' => 'application/json',
+        ], JSON_UNESCAPED_UNICODE));
+    }
 }
