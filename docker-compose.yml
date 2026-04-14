@@ -9,6 +9,9 @@ services:
       - ./:/var/www/html
     ports:
       - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+      - "8003:8003"
     environment:
       COMPOSER_ALLOW_SUPERUSER: "1"
     command: >
