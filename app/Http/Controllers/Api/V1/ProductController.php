@@ -13,8 +13,7 @@ class ProductController extends Controller
 {
     public function __construct(
         private readonly ProductService $productService,
-    ) {
-    }
+    ) {}
 
     #[OA\Get(
         path: '/api/v1/products',

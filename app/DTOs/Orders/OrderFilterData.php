@@ -12,8 +12,7 @@ final readonly class OrderFilterData
         public ?string $dateFrom = null,
         public ?string $dateTo = null,
         public int $perPage = 15,
-    ) {
-    }
+    ) {}
 
     /**
      * @param  array{status?:string|null,customer_id?:int|null,date_from?:string|null,date_to?:string|null,per_page?:int|null}  $data

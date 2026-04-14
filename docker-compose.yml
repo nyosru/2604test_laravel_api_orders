@@ -16,7 +16,7 @@ services:
       - postgres
       - redis
     healthcheck:
-      test: ["CMD", "php", "-r", "$$headers = @get_headers('http://127.0.0.1:8000/'); exit(str_contains($$headers[0] ?? '', '200') ? 0 : 1);"]
+      test: ["CMD", "php", "-r", "$$headers = @get_headers('http://127.0.0.1:8000/up'); exit(str_contains($$headers[0] ?? '', '200') ? 0 : 1);"]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -25,7 +25,7 @@ services:
   queue:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile
+      dockerfile: Dockerfile
     container_name: laravel_orders_queue
     working_dir: /var/www/html
     volumes:
@@ -36,19 +36,19 @@ services:
         condition: service_healthy
       postgres:
         condition: service_started
-      laravel_orders_redis:
+      redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "php", "-r", "exit(str_contains(@file_get_contents('/proc/1/cmdline') ?: '', 'queue:work') ? 0 : 1);"]
-      interval: 30s
+      interval: 10s
       timeout: 5s
       retries: 3
-      start_period: 10s
+      start_period: 8s
     restart: unless-stopped
 
   postgres:
     image: postgres:17-alpine
-    container_name: laravel_orders_postgres
+    container_name: postgres
     ports:
       - "5432:5432"
     environment:
@@ -58,7 +58,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: laravel_orders_redis
+    container_name: redis
     ports:
       - "6379:6379"
     healthcheck:

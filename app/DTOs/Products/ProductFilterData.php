@@ -8,8 +8,7 @@ final readonly class ProductFilterData
         public ?string $category = null,
         public ?string $search = null,
         public int $perPage = 15,
-    ) {
-    }
+    ) {}
 
     /**
      * @param  array{category?:string|null,search?:string|null,per_page?:int|null}  $data

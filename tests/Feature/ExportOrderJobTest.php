@@ -26,7 +26,7 @@ class ExportOrderJobTest extends TestCase
             $fake_uri => Http::response(['ok' => true], 200),
         ]);
 
-        config()->set('services.order_export.url', $fake_uri );
+        config()->set('services.order_export.url', $fake_uri);
 
         $customer = Customer::factory()->create();
         $product = Product::factory()->create();
@@ -44,7 +44,7 @@ class ExportOrderJobTest extends TestCase
         $job = new ExportOrderJob($order->id);
         $job->handle();
 
-        Http::assertSent(function (Request $request) use ($order, $customer, $product, $fake_uri ): bool {
+        Http::assertSent(function (Request $request) use ($order, $customer, $product, $fake_uri): bool {
             $data = $request->data();
 
             return $request->method() === 'POST'

@@ -1,4 +1,4 @@
-.PHONY: serve swagger queue queue-logs
+.PHONY: start serve swagger queue queue-logs lint
 
 start:
 	cp .env.example .env
@@ -22,6 +22,9 @@ queue:
 
 queue-logs:
 	docker compose logs -f queue
+
+lint:
+	docker compose exec php ./vendor/bin/pint
 
 bash:
 	docker exec -it laravel_orders_php bash

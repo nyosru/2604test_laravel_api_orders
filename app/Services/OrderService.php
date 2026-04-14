@@ -26,8 +26,7 @@ class OrderService
         private readonly OrderItemRepositoryInterface $orderItemRepository,
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly ProductRepositoryInterface $productRepository,
-    ) {
-    }
+    ) {}
 
     public function create(CreateOrderData $data): Order
     {
@@ -46,7 +45,7 @@ class OrderService
                 $product = $products->get($item->productId);
 
                 if (! $product) {
-                    throw (new ModelNotFoundException())->setModel(Product::class, [$item->productId]);
+                    throw (new ModelNotFoundException)->setModel(Product::class, [$item->productId]);
                 }
 
                 if ($product->stock_quantity < $item->quantity) {

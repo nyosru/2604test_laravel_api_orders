@@ -25,6 +25,4 @@ use OpenApi\Attributes as OA;
     name: 'Orders',
     description: 'Order management endpoints'
 )]
-class OpenApiSpec
-{
-}
+class OpenApiSpec {}

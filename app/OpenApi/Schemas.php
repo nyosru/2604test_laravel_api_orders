@@ -133,6 +133,4 @@ use OpenApi\Attributes as OA;
     ],
     type: 'object'
 )]
-class Schemas
-{
-}
+class Schemas {}

@@ -9,8 +9,7 @@ final readonly class UpdateOrderStatusData
     public function __construct(
         public int $orderId,
         public OrderStatus $status,
-    ) {
-    }
+    ) {}
 
     /**
      * @param  array{status:string}  $data
