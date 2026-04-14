@@ -11,6 +11,13 @@ services:
       - "8000:8000"
     environment:
       COMPOSER_ALLOW_SUPERUSER: "1"
+    command: >
+      sh -lc "
+      if [ ! -f vendor/autoload.php ]; then
+        composer install;
+      fi &&
+      php artisan serve --host=0.0.0.0 --port=8000
+      "
     depends_on:
       - postgres
       - redis
@@ -23,7 +30,13 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
-    command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90
+    command: >
+      sh -lc "
+      until [ -f vendor/autoload.php ]; do
+        sleep 2;
+      done &&
+      php artisan queue:work redis --sleep=3 --tries=3 --timeout=90
+      "
     depends_on:
       php:
         condition: service_started
