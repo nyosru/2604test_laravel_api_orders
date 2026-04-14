@@ -136,13 +136,7 @@ class OrderController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             description: 'New order status',
-            content: new OA\JsonContent(
-                required: ['status'],
-                properties: [
-                    new OA\Property(property: 'status', type: 'string', enum: ['new', 'confirmed', 'processing', 'shipped', 'completed', 'cancelled'], example: 'confirmed'),
-                ],
-                type: 'object'
-            )
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateOrderStatusRequest')
         ),
         responses: [
             new OA\Response(

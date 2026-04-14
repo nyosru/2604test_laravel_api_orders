@@ -27,6 +27,19 @@ use OpenApi\Attributes as OA;
     type: 'object'
 )]
 #[OA\Schema(
+    schema: 'UpdateOrderStatusRequest',
+    required: ['status'],
+    properties: [
+        new OA\Property(
+            property: 'status',
+            type: 'string',
+            enum: ['new', 'confirmed', 'processing', 'shipped', 'completed', 'cancelled'],
+            example: 'confirmed'
+        ),
+    ],
+    type: 'object'
+)]
+#[OA\Schema(
     schema: 'Product',
     required: ['id', 'name', 'sku', 'price', 'stock_quantity', 'category'],
     properties: [

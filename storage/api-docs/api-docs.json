@@ -239,24 +239,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "status"
-                                ],
-                                "properties": {
-                                    "status": {
-                                        "type": "string",
-                                        "example": "confirmed",
-                                        "enum": [
-                                            "new",
-                                            "confirmed",
-                                            "processing",
-                                            "shipped",
-                                            "completed",
-                                            "cancelled"
-                                        ]
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/UpdateOrderStatusRequest"
                             }
                         }
                     }
@@ -455,6 +438,26 @@
                         "items": {
                             "$ref": "#/components/schemas/CreateOrderItemRequest"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateOrderStatusRequest": {
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "confirmed",
+                        "enum": [
+                            "new",
+                            "confirmed",
+                            "processing",
+                            "shipped",
+                            "completed",
+                            "cancelled"
+                        ]
                     }
                 },
                 "type": "object"
