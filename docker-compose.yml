@@ -1,9 +1,9 @@
 services:
-  php:
+  laravel_orders_php:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: php
+    container_name: laravel_orders_php
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
@@ -41,7 +41,7 @@ services:
       php artisan queue:work redis --sleep=3 --tries=3 --timeout=90
       "
     depends_on:
-      php:
+      laravel_orders_php:
         condition: service_started
       postgres:
         condition: service_started
