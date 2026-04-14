@@ -5,3 +5,6 @@ serve:
 
 swagger:
 	php artisan l5-swagger:generate
+
+bash:
+	docker exec -it laravel_orders_php bash

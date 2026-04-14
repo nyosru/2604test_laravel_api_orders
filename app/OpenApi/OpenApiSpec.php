@@ -17,6 +17,14 @@ use OpenApi\Attributes as OA;
     name: 'Health',
     description: 'Application health endpoints'
 )]
+#[OA\Tag(
+    name: 'Products',
+    description: 'Product catalog endpoints'
+)]
+#[OA\Tag(
+    name: 'Orders',
+    description: 'Order management endpoints'
+)]
 class OpenApiSpec
 {
 }
