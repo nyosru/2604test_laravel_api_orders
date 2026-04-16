@@ -18,6 +18,7 @@
                     "Orders"
                 ],
                 "summary": "Get orders list",
+                "description": "получаем все заказы",
                 "operationId": "listOrders",
                 "parameters": [
                     {

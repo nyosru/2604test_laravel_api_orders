@@ -55,6 +55,9 @@ class OrderController extends Controller
             ),
         ]
     )]
+    /**
+     * получаем все заказы
+     */
     public function index(OrderIndexRequest $request): AnonymousResourceCollection
     {
         $orders = $this->orderService->paginate($request->toDto());

@@ -12,12 +12,11 @@ start:
 	@echo "❤️ ++ Свагер готов"
 	docker compose exec laravel_orders_php php artisan migrate:fresh --seed --force
 	@echo "❤️ ++ Миграции обновлены, БД засеяна данными"
-	@sleep 2
-	make serve
+	@echo "❤️ ++ Сайт доступен: http://localhost"
+	@echo "❤️ ++ Swagger доступен: http://localhost/api/documentation"
 
 serve:
-	#docker compose exec php php artisan serve --host=127.0.0.1 --port=8000
-	docker compose exec laravel_orders_php php artisan serve
+	docker compose up -d nginx laravel_orders_php
 
 swagger:
 	php artisan l5-swagger:generate
