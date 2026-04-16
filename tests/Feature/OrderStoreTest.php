@@ -102,4 +102,36 @@ class OrderStoreTest extends TestCase
         $this->assertDatabaseCount('order_items', 0);
         $this->assertSame(1, $product->fresh()->stock_quantity);
     }
+
+    public function test_it_limits_order_creation_to_ten_requests_per_minute_per_ip(): void
+    {
+        $customer = Customer::factory()->create();
+        $product = Product::factory()->create([
+            'price' => 15.00,
+            'stock_quantity' => 100,
+        ]);
+
+        $payload = [
+            'customer_id' => $customer->id,
+            'items' => [
+                [
+                    'product_id' => $product->id,
+                    'quantity' => 1,
+                ],
+            ],
+        ];
+
+        for ($attempt = 0; $attempt < 10; $attempt++) {
+            $this->withServerVariables(['REMOTE_ADDR' => '203.0.113.10'])
+                ->postJson('/api/v1/orders', $payload)
+                ->assertCreated();
+        }
+
+        $this->withServerVariables(['REMOTE_ADDR' => '203.0.113.10'])
+            ->postJson('/api/v1/orders', $payload)
+            ->assertStatus(429);
+
+        $this->assertDatabaseCount('orders', 10);
+        $this->assertSame(90, $product->fresh()->stock_quantity);
+    }
 }

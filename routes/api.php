@@ -11,7 +11,7 @@ Route::prefix('v1')->group(function (): void {
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{order}', [OrderController::class, 'show']);
 
-    Route::post('/orders', [OrderController::class, 'store']);
+    Route::post('/orders', [OrderController::class, 'store'])->middleware('throttle:10,1');
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus']);
 
 });
